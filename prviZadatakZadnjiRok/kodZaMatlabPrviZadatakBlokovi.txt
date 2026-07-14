@@ -1,0 +1,16 @@
+s  = tf('s');
+W1 = (s^2+2)/(s^3+2s^2+6s+1);
+W2 = 3/(s+4);
+W3 = (s+1)/(s^2+3);
+W4 = s/(s^3+6s^2+11s+2);
+W5 = 0.75;
+
+G12 = series(W1,W2);          % W1*W2
+Gu  = feedback(G12,W5,+1);    % unutrašnja POZITIVNA povratna veza
+W34 = parallel(W3,W4);        % W3 + W4
+G   = series(Gu,W34);
+W   = minreal(feedback(G,1))  % vanjska negativna jedinična povratna veza
+
+figure; step(W,150);    grid on;   % odskočni odziv
+figure; impulse(W,150); grid on;   % impulsni odziv
+pole(W), dcgain(W), stepinfo(W)
